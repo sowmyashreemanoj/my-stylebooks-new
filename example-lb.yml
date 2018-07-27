@@ -1,0 +1,54 @@
+name: example-lb
+namespace: com.example.stylebook
+version: "1.0"
+display-name: Basic Load Balancer App
+description: This is an example Stylebook that creates a load balancer application
+schema-version: "1.0"
+import-stylebooks: 
+  - 
+    namespace: netscaler.nitro.config
+    version: "10.5"
+    prefix: ns
+
+parameters: 
+  - 
+    name: appname
+    label: "Application Name"
+    description: "String to identify the application"
+    type: string
+    required: true
+  - 
+    name: vip-ipaddress
+    label: "Load Balancer IP Address"
+    description: "IP Address of the Load Balancer VIP"
+    type: ipaddress
+    required: true
+  - 
+    name: port
+    label: "Load Balancer Port"
+    description: "TCP Port of the Load Balancer"
+    type: tcp-port
+    default: 80
+    
+  - 
+    name: service-type
+    label: "Service Type"
+    description: "Service type the Load Balancer"
+    type: string
+    allowed-values:
+          - HTTP
+          - TCP
+          - UDP
+          - ANY
+    default: HTTP
+
+components:
+
+  -
+    name: components1
+    type: ns::lbvserver
+    properties: 
+      name: "lb1"
+      ipv46: $parameters.vip-ipaddress
+      servicetype: $parameters.service-type
+      port: $parameters.port
